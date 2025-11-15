@@ -19,6 +19,7 @@ class CountdownSigns : JavaPlugin() {
     sh.runTaskTimer(this, 100, 100)
     getCommand("signadd")?.setExecutor(SignAddCommandExecutor(this))
     getCommand("signremove")?.setExecutor(SignRemoveCommandExecutor(this))
+    getCommand("signreload")?.setExecutor(SignReloadCommandExecutor(this))
     logger.info("Done!")
   }
 

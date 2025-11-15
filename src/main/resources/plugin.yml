@@ -12,9 +12,15 @@ commands:
   signremove:
     usage: /<command>
     permission: countdownsigns.remove
-    description: Remove a sign
+    description: Remove a sign.
+  signreload:
+    usage: /<command>
+    permission: countdownsigngs.reload
+    description: Reload the plugin.
 permissions:
   countdownsigns.add:
     default: op
   countdownsigns.remove:
+    default: op
+  countdownsigns.reload:
     default: op
