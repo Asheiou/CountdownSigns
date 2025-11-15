@@ -1,0 +1,20 @@
+name: CountdownSigns
+version: '${version}'
+main: cymru.asheiou.countdownSigns.CountdownSigns
+api-version: '1.21'
+depend:
+  - KotKit
+commands:
+  signadd:
+    usage: /<command> <expiry UNIX timestamp>
+    permission: countdownsigns.add
+    description: Add a sign.
+  signremove:
+    usage: /<command>
+    permission: countdownsigns.remove
+    description: Remove a sign
+permissions:
+  countdownsigns.add:
+    default: op
+  countdownsigns.remove:
+    default: op

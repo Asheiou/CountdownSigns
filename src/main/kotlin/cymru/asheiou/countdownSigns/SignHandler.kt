@@ -1,0 +1,83 @@
+package cymru.asheiou.countdownSigns
+
+import kotlinx.serialization.json.Json
+import org.bukkit.Bukkit
+import org.bukkit.block.Block
+import org.bukkit.block.Sign
+import org.bukkit.block.sign.Side
+import org.bukkit.scheduler.BukkitRunnable
+import java.io.File
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
+
+
+class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
+  val signs: MutableMap<Block, Long> = mutableMapOf()
+  val path = cs.dataFolder.toString() + File.separator + "signs.json"
+  val file = File(path)
+
+  fun init() {
+    if (!file.exists()) {
+      cs.saveResource("signs.json", true)
+      return
+    }
+    signs.clear()
+    val signsJson = Json.decodeFromString<MutableList<SignData>>(file.readText())
+    signsJson.forEach {
+      val world = Bukkit.getServer().getWorld(it.world)?: return@forEach
+      val block = world.getBlockAt(it.x, it.y, it.z)
+      signs.put(block, it.expiry)
+    }
+  }
+
+  override fun run() {
+    signs.forEach { block, expiry ->
+      if(!block.chunk.isLoaded) return@forEach
+      if(block.state !is Sign) {
+        cs.logger.fine("Block at ${block.x}, ${block.y}, ${block.z} is not a sign!")
+        return@forEach
+      }
+      val sign = block.state as Sign
+      val line = cs.config.getInt("line")
+      val format = cs.config.getString("format")!!
+      val formatted = formatDiff(expiry, format)
+
+      listOf(sign.getSide(Side.FRONT), sign.getSide(Side.BACK)).forEach { side ->
+        side.line(line, MessageSender.miniMessage.deserialize(formatted))
+      }
+
+      sign.update()
+    }
+  }
+
+  override fun cancel() {
+    saveAll()
+  }
+
+  fun saveAll() {
+    val signList = mutableListOf<SignData>()
+    signs.forEach { (block, expiry) ->
+      signList.add(SignData.fromBlock(block, expiry))
+    }
+    val signsJson = Json.encodeToString(signList)
+    file.writeText(signsJson)
+  }
+
+  companion object {
+    fun formatDiff(expiry: Long, format: String): String {
+      val now = System.currentTimeMillis()
+      val diff: Duration = (expiry - now).milliseconds
+
+      val days = diff.inWholeDays
+      val hours = (diff - days.days).inWholeHours
+      val minutes = (diff - days.days - hours.hours).inWholeMinutes
+
+      return format
+        .replace("{d}", days.toString())
+        .replace("{h}", hours.toString())
+        .replace("{m}", minutes.toString())
+    }
+  }
+}
