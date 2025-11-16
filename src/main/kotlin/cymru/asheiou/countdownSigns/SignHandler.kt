@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.minutes
 
 
 class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
-  val signs: MutableMap<Location, Pair<Long, Int>> = mutableMapOf()
+  val signs: MutableMap<Location, SignMeta> = mutableMapOf()
   val path = cs.dataFolder.toString() + File.separator + "signs.json"
   val file = File(path)
 
@@ -28,7 +28,7 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
     signsJson.forEach {
       val world = Bukkit.getServer().getWorld(it.world) ?: return@forEach
       val block = world.getBlockAt(it.x, it.y, it.z)
-      signs.put(block.location, it.expiry to it.line)
+      signs.put(block.location, it.meta)
     }
   }
 
@@ -42,15 +42,15 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
       }
       val sign = location.block.state as Sign
       val format = cs.config.getString("format")!!
-      val formatted = formatDiff(data.first, format)
+      val formatted = formatDiff(data.expiry, format)
 
       listOf(sign.getSide(Side.FRONT), sign.getSide(Side.BACK)).forEach { side ->
-        side.line(data.second, MessageSender.miniMessage.deserialize(formatted))
+        side.line(data.line, MessageSender.miniMessage.deserialize(formatted))
       }
 
       sign.update()
 
-      if (data.first < System.currentTimeMillis()) signsToRemove += location
+      if (data.expiry < System.currentTimeMillis()) signsToRemove += location
 
     }
     signsToRemove.forEach {
@@ -65,7 +65,7 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
   fun saveAll() {
     val signList = mutableListOf<SignData>()
     signs.forEach { (location, data) ->
-      signList.add(SignData.fromBlock(location.block, data.first, data.second))
+      signList.add(SignData.fromBlock(location.block, data))
     }
     val signsJson = Json.encodeToString(signList)
     file.writeText(signsJson)

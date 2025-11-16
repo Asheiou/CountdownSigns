@@ -2,7 +2,6 @@ package cymru.asheiou.countdownSigns
 
 import kotlinx.serialization.Serializable
 import org.bukkit.block.Block
-import org.bukkit.block.Sign
 
 @Serializable
 data class SignData(
@@ -10,12 +9,12 @@ data class SignData(
   val y: Int,
   val z: Int,
   val world: String,
-  val expiry: Long,
-  val line: Int = 1
+  val meta: SignMeta
 ) {
+
   companion object {
-    fun fromBlock(sign: Block, expiry: Long, line: Int): SignData {
-      return SignData(sign.x, sign.y, sign.z, sign.world.name, expiry, line)
+    fun fromBlock(sign: Block, meta: SignMeta): SignData {
+      return SignData(sign.x, sign.y, sign.z, sign.world.name, meta)
     }
   }
 }
