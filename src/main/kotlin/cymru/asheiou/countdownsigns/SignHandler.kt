@@ -34,7 +34,8 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
   override fun run() {
     val signsToRemove = mutableListOf<Location>()
     signs.forEach { location, data ->
-      if (!location.chunk.isLoaded) return@forEach
+      val world = location.world ?: return@forEach
+      if (!world.isChunkLoaded(location.blockX shr 4, location.blockZ shr 4)) return@forEach
       if (location.block.state !is Sign) {
         cs.logger.fine("Block at ${location.x}, ${location.y}, ${location.z} is not a sign!")
         return@forEach
