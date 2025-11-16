@@ -32,6 +32,7 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
   }
 
   override fun run() {
+    val signsToRemove = mutableListOf<Block>()
     signs.forEach { block, expiry ->
       if (!block.chunk.isLoaded) return@forEach
       if (block.state !is Sign) {
@@ -48,6 +49,12 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
       }
 
       sign.update()
+
+      if (expiry < System.currentTimeMillis()) signsToRemove += block
+
+    }
+    signsToRemove.forEach {
+      signs.remove(it)
     }
   }
 
