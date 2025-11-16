@@ -15,7 +15,7 @@ commands:
     description: Remove a sign.
   signreload:
     usage: /<command>
-    permission: countdownsigngs.reload
+    permission: countdownsigns.reload
     description: Reload the plugin.
 permissions:
   countdownsigns.add:
