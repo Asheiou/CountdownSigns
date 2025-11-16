@@ -2,6 +2,7 @@ package cymru.asheiou.countdownSigns
 
 import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
+import org.bukkit.Location
 import org.bukkit.block.Block
 import org.bukkit.block.Sign
 import org.bukkit.block.sign.Side
@@ -13,7 +14,7 @@ import kotlin.time.Duration.Companion.minutes
 
 
 class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
-  val signs: MutableMap<Block, Long> = mutableMapOf()
+  val signs: MutableMap<Location, Pair<Long, Int>> = mutableMapOf()
   val path = cs.dataFolder.toString() + File.separator + "signs.json"
   val file = File(path)
 
@@ -27,30 +28,29 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
     signsJson.forEach {
       val world = Bukkit.getServer().getWorld(it.world) ?: return@forEach
       val block = world.getBlockAt(it.x, it.y, it.z)
-      signs.put(block, it.expiry)
+      signs.put(block.location, it.expiry to it.line)
     }
   }
 
   override fun run() {
-    val signsToRemove = mutableListOf<Block>()
-    signs.forEach { block, expiry ->
-      if (!block.chunk.isLoaded) return@forEach
-      if (block.state !is Sign) {
-        cs.logger.fine("Block at ${block.x}, ${block.y}, ${block.z} is not a sign!")
+    val signsToRemove = mutableListOf<Location>()
+    signs.forEach { location, data ->
+      if (!location.chunk.isLoaded) return@forEach
+      if (location.block.state !is Sign) {
+        cs.logger.fine("Block at ${location.x}, ${location.y}, ${location.z} is not a sign!")
         return@forEach
       }
-      val sign = block.state as Sign
-      val line = cs.config.getInt("line")
+      val sign = location.block.state as Sign
       val format = cs.config.getString("format")!!
-      val formatted = formatDiff(expiry, format)
+      val formatted = formatDiff(data.first, format)
 
       listOf(sign.getSide(Side.FRONT), sign.getSide(Side.BACK)).forEach { side ->
-        side.line(line, MessageSender.miniMessage.deserialize(formatted))
+        side.line(data.second, MessageSender.miniMessage.deserialize(formatted))
       }
 
       sign.update()
 
-      if (expiry < System.currentTimeMillis()) signsToRemove += block
+      if (data.first < System.currentTimeMillis()) signsToRemove += location
 
     }
     signsToRemove.forEach {
@@ -64,8 +64,8 @@ class SignHandler(private val cs: CountdownSigns) : BukkitRunnable() {
 
   fun saveAll() {
     val signList = mutableListOf<SignData>()
-    signs.forEach { (block, expiry) ->
-      signList.add(SignData.fromBlock(block, expiry))
+    signs.forEach { (location, data) ->
+      signList.add(SignData.fromBlock(location.block, data.first, data.second))
     }
     val signsJson = Json.encodeToString(signList)
     file.writeText(signsJson)

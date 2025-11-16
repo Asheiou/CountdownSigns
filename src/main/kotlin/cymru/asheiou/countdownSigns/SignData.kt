@@ -10,11 +10,12 @@ data class SignData(
   val y: Int,
   val z: Int,
   val world: String,
-  val expiry: Long
+  val expiry: Long,
+  val line: Int = 1
 ) {
   companion object {
-    fun fromBlock(sign: Block, expiry: Long): SignData {
-      return SignData(sign.x, sign.y, sign.z, sign.world.name, expiry)
+    fun fromBlock(sign: Block, expiry: Long, line: Int): SignData {
+      return SignData(sign.x, sign.y, sign.z, sign.world.name, expiry, line)
     }
   }
 }
