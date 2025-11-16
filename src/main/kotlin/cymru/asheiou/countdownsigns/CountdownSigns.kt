@@ -1,6 +1,7 @@
 package cymru.asheiou.countdownsigns
 
 import cymru.asheiou.configmanager.ConfigManager
+import org.bstats.bukkit.Metrics
 import org.bukkit.plugin.java.JavaPlugin
 
 class CountdownSigns : JavaPlugin() {
@@ -20,6 +21,9 @@ class CountdownSigns : JavaPlugin() {
     getCommand("signadd")?.setExecutor(SignAddCommandExecutor(this))
     getCommand("signremove")?.setExecutor(SignRemoveCommandExecutor(this))
     getCommand("signreload")?.setExecutor(SignReloadCommandExecutor(this))
+
+    Metrics(this, 28002)
+
     logger.info("Done!")
   }
 

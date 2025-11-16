@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "cymru.asheiou"
-version = "1.1"
+version = "1.0"
 
 repositories {
   mavenCentral()
@@ -22,6 +22,7 @@ dependencies {
   compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
   compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
   implementation("cymru.asheiou:configmanager:1.2.2")
+  implementation("org.bstats:bstats-bukkit:3.0.2")
   compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 }
 
@@ -55,4 +56,5 @@ tasks.processResources {
 tasks.shadowJar {
   archiveClassifier.set("")
   relocate("cymru.asheiou.configmanager", "cymru.asheiou.countdownsigns.shade.cm")
+  relocate("org.bstats", "cymru.asheiou.countdownsigns.shade.bstats")
 }
