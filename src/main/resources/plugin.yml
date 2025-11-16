@@ -6,7 +6,7 @@ depend:
   - KotKit
 commands:
   signadd:
-    usage: /<command> <expiry UNIX timestamp>
+    usage: /<command> <expiry UNIX timestamp> <sign line>
     permission: countdownsigns.add
     description: Add a sign.
   signremove:
