@@ -1,4 +1,4 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import kotlinx.serialization.Serializable
 

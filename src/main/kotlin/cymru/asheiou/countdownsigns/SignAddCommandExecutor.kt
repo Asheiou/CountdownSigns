@@ -1,6 +1,6 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
-import cymru.asheiou.countdownSigns.SignHandler.Companion.formatDiff
+import cymru.asheiou.countdownsigns.SignHandler.Companion.formatDiff
 import org.bukkit.block.Sign
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

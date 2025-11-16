@@ -1,9 +1,8 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import kotlinx.serialization.json.Json
 import org.bukkit.Bukkit
 import org.bukkit.Location
-import org.bukkit.block.Block
 import org.bukkit.block.Sign
 import org.bukkit.block.sign.Side
 import org.bukkit.scheduler.BukkitRunnable

@@ -1,6 +1,6 @@
 name: CountdownSigns
 version: '${version}'
-main: cymru.asheiou.countdownSigns.CountdownSigns
+main: cymru.asheiou.countdownsigns.CountdownSigns
 api-version: '1.21'
 depend:
   - KotKit

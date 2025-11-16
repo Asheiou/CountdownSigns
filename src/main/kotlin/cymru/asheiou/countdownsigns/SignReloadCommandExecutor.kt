@@ -1,4 +1,4 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor

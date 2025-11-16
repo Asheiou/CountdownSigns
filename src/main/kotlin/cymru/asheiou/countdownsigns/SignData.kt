@@ -1,4 +1,4 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import kotlinx.serialization.Serializable
 import org.bukkit.block.Block

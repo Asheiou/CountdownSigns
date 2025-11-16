@@ -1,4 +1,4 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.text.Component

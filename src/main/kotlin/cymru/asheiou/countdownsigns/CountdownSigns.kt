@@ -1,4 +1,4 @@
-package cymru.asheiou.countdownSigns
+package cymru.asheiou.countdownsigns
 
 import cymru.asheiou.configmanager.ConfigManager
 import org.bukkit.plugin.java.JavaPlugin
